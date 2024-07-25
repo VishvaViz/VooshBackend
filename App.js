@@ -28,7 +28,7 @@ app.use('/api/user',userAuth)
 app.use('/api/task',task)
 
 app.get('/',(req,resp)=>{
-    resp.send('Welcome to the task app')
+    resp.send('<h1>Welcome to the task app</h1>')
 })
 
 // Start server
