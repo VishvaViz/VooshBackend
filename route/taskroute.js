@@ -11,6 +11,6 @@ const { jwtverify } = require('../middleware/jwtverify')
 router.get('/gettask',jwtverify,gettask)
 router.post('/addtask',jwtverify,addTask)
 router.put('/edittask',jwtverify,editTask)
-router.put('/deletetask',jwtverify,deleteTask)
+router.delete('/deletetask/:taskId',jwtverify,deleteTask)
 
 module.exports=router

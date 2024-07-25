@@ -5,7 +5,7 @@ const taskSchema=new mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:'users'
     },
-    tittle:{
+    title:{
         type:String
     },
     description:{

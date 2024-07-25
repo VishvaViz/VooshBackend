@@ -5,16 +5,13 @@ const bcrypt=require('bcrypt')
 
 const register = async (req, resp) => {
     const { firstName, lastName, email, password } = req.body
-    console.log(req.body)
     try {
-
         if (req.body) {
             const findUser = await userSchema.findOne(
                 {
                     email: email
                 }
             )
-            console.log('finduser', findUser)
             if (findUser) {
                 resp.status(200).json({ success: false, message: 'User Already Exists' })
             }
@@ -25,7 +22,6 @@ const register = async (req, resp) => {
                     email: email,
                     password: password
                 })
-                console.log('createuser', createUser)
                 if (createUser) {
                     await createUser.save()
                     const token = generateToken(createUser?._id)
@@ -42,7 +38,6 @@ const register = async (req, resp) => {
 
 const login = async (req, resp) => {
     const { email, password } = req.body
-    console.log(req.body)
     try {
         if (req.body) {
             const findUser=await userSchema.findOne({
