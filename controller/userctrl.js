@@ -1,10 +1,27 @@
 const userSchema = require('../model/usermodel')
 const { generateToken } = require('../config/jwttoken')
-const bcrypt=require('bcrypt')
+const bcrypt = require('bcrypt')
 
+
+
+const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+};
+
+const validateName = (name) => {
+    const regex = /^[a-zA-Z]{2,50}$/;
+    return regex.test(name);
+};
+
+const validatePassword = (password) => {
+    const regex = /^[a-zA-Z0-9]{6,50}$/;
+    return regex.test(password);
+};
 
 const register = async (req, resp) => {
     const { firstName, lastName, email, password } = req.body
+    console.log(req.body)
     try {
         if (req.body) {
             const findUser = await userSchema.findOne(
@@ -22,6 +39,7 @@ const register = async (req, resp) => {
                     email: email,
                     password: password
                 })
+                console.log('create',createUser)
                 if (createUser) {
                     await createUser.save()
                     const token = generateToken(createUser?._id)
@@ -40,21 +58,21 @@ const login = async (req, resp) => {
     const { email, password } = req.body
     try {
         if (req.body) {
-            const findUser=await userSchema.findOne({
-                email:email
+            const findUser = await userSchema.findOne({
+                email: email
             })
-            if(findUser){
-                const validate= await bcrypt.compare(password,findUser?.password)
-                if(validate===true){
+            if (findUser) {
+                const validate = await bcrypt.compare(password, findUser?.password)
+                if (validate === true) {
                     const token = generateToken(findUser?._id)
-                    resp.status(200).json({success:true,message:'Login Success',user:findUser,token})
+                    resp.status(200).json({ success: true, message: 'Login Success', user: findUser, token })
                 }
-                else{
-                    resp.status(200).json({success:false,message:'Invalid Password'})
+                else {
+                    resp.status(200).json({ success: false, message: 'Invalid Password' })
                 }
             }
-            else{
-                resp.status(200).json({success:false,message:'User Not Found'})
+            else {
+                resp.status(200).json({ success: false, message: 'User Not Found' })
             }
         }
     }
@@ -63,13 +81,13 @@ const login = async (req, resp) => {
     }
 }
 
-const userDetails=async(req,resp)=>{
-    const user=req.user
-    if(user){
-        resp.status(200).json({success:true,message:'User Fected',user})
+const userDetails = async (req, resp) => {
+    const user = req.user
+    if (user) {
+        resp.status(200).json({ success: true, message: 'User Fected', user })
     }
-    else{
-        resp.status(200).json({success:false,message:'User Not found'})
+    else {
+        resp.status(200).json({ success: false, message: 'User Not found' })
     }
 }
 

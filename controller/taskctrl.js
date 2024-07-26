@@ -84,43 +84,7 @@ const editTask = async (req, resp) => {
     }
 }
 
-// const deleteTask = async (req, resp) => {
-//     const { taskId } = req.params
-//     const { _id } = req.user
-//     console.log('task', taskId)
 
-//     try {
-
-
-//         if (req.user) {
-//             const deleteTask = await taskSchema.findByIdAndDelete(
-//                 {
-//                     author: _id,
-//                     _id: taskId,
-
-//                 },
-//                 { new: true }
-//             )
-//             if (deleteTask) {
-//                 await deleteTask.save()
-//                 const taskDetails = await taskSchema.find({
-//                     author: _id
-//                 })
-//                 resp.status(201).json({ success: true, message: 'TaskAdded', task: taskDetails })
-//             }
-//             else {
-//                 resp.status(200).json({ success: false, message: 'Someting went wrong' })
-//             }
-//         }
-//         else {
-//             resp.status(200).json({ success: false, message: 'Invalid User Credentials' })
-//         }
-//     }
-//     catch (error) {
-//         console.log('error', error)
-//         resp.status(500).json({ success: false, message: 'Internal Error', error })
-//     }
-// }
 
 const deleteTask = async (req, resp) => {
     const { taskId } = req.params;
@@ -153,6 +117,47 @@ const deleteTask = async (req, resp) => {
 };
 
 
+// const updateTaskStatus=async(req,resp)=>{
+//     const {taskId}=req.params;
+//     const {_id}=req.user;
+//     const {status}=req.body
+
+
+
+// }
+
+const updateTaskStatus = async (req, res) => {
+    try {
+        const { taskId } = req.params;
+        const { status } = req.body;
+        const userId = req.user._id;
+        console.log("req.body",req.body)
+        console.log('taskId',taskId)
+   
+        // Check if the task exists
+        const task = await taskSchema.findOne({ _id: taskId, author: userId });
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        // Update the task status
+        task.status = status;
+        await task.save();
+        console.log('task',task)
+
+        // Respond with the updated task
+        const findTask=await taskSchema.find({
+            author:userId
+        })
+        res.status(200).json({success:true,message:'status Changed',task:findTask});
+    } catch (error) {
+        console.error('Error updating task status:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+
 
 
 const gettask = async (req, resp) => {
@@ -179,7 +184,8 @@ module.exports = {
     addTask,
     editTask,
     deleteTask,
-    gettask
+    gettask,
+    updateTaskStatus
 
 }
 

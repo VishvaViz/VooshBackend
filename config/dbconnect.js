@@ -1,7 +1,6 @@
 const mongoose=require('mongoose')
 const dotenv=require('dotenv').config()
 const URI=process.env.DB_URI
-
 const dbconnect=()=>{
     mongoose.connect(URI)
     .then(()=>{
