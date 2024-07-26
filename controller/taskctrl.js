@@ -37,7 +37,7 @@ const addTask = async (req, resp) => {
 }
 
 const editTask = async (req, resp) => {
-    const { taskId, title, description, status } = req.body?.details
+    const { taskId, title, description } = req.body?.details
     const { _id } = req.user
     try {
 
@@ -52,7 +52,6 @@ const editTask = async (req, resp) => {
                         $set: {
                             title: title,
                             description: description,
-                            status: status
                         }
                     },
                     {
